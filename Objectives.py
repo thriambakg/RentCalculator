@@ -6,3 +6,7 @@ Python file takes information from the html file regarding a new user and create
 
 
 Ahmad
+-user authentication
+-Flask
+-Ginja
+-Create accounts
