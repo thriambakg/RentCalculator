@@ -3,16 +3,12 @@ cgitb.enable()
 
 def signUppage():
      while True:
-          file = open(r"C:/Users/giriprtr/Desktop/Website/yuh.txt", "w")
+
           firstname = input("First name: ")
           lastname = input("Last name: ")
           username = input("Username: ")
           password = input("Password: ")
           password2 = input("Repeat password: ")
-          file.write(firstname + ', ')
-          file.write(lastname + ', ')
-          file.write(username + ', ')
-
           if (password == password2):
                file.write(password)
                break
@@ -21,6 +17,10 @@ def signUppage():
                if (verify == password):
                     file.write(password)
                     break
+          file = open(firstname+lastname+".txt", "w")
+          file.write(username + ', ')
+
+
 
 
      file.close()
