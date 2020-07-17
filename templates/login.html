@@ -12,8 +12,8 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav ml-auto">
           <li class="nav-item">
-            <a class="nav-link" href="login.html">Login/Signup <span class="sr-only">(current)</span></a>
-          </li>
+            <a class="nav-link" href="login.html">Login<span class="sr-only">(current)</span></a>
+            <a class="nav-link" href="signup.html">Sign Up<span class="sr-only">(current)</span></a>          </li>
         </ul>
       </div>
     </nav>
@@ -21,19 +21,17 @@
     <div class="container jumbotron">
       <h1>Log In</h1>
       <hr>
-      <form>
+      <form method="post">
         <div class="form-group">
-          <label for="exampleInputEmail1">Email</label>
-          <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-          <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+          <label for="username">First Name</label>
+          <input type="name" class="form-control" name = "userName">
         </div>
         <div class="form-group">
           <label for="exampleInputPassword1">Password</label>
-          <input type="password" class="form-control" id="exampleInputPassword1">
+          <input type="password" class="form-control" name = "pass">
         </div>
 
         <button type="submit" class="btn btn-primary">Login</button>
-        <a class="btn btn-secondary" href="signup.html" role="button">Sign Up</a>
       </form>
     </div>
 
