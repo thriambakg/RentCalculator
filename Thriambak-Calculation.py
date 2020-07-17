@@ -21,13 +21,16 @@ def signUppage():
 
 
 def loginpage():
-     username = input('Username: ')
-     password = input('password: ')
-     access = os.path.isfile('C:/Users/giriprtr/PycharmProjects/RentCalculator/'+ username+','+password+'.txt')
-     if access == True:
-          print('yay')
-     else:
-          print('fail')
+     while True:
+          username = input('Username: ')
+          password = input('password: ')
+          access = os.path.isfile('C:/Users/giriprtr/PycharmProjects/RentCalculator/'+ username+','+password+'.txt')
+          if access == True:
+               print('Login successful')
+               break
+          else:
+               print('fail')
+               pass
 
 
 
