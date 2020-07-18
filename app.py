@@ -46,20 +46,18 @@ def loginPage():
 
 @app.route("/login.html", methods=['POST'])
 def login():
-    username = request.form['userName']
-    password = request.form['pass']
-    name = False
-    passb = False
-    for x in users:
-        if x == username:
-            name = True
-    for y in users.values():
-        if y == password:
-            passb = True
-    if name and passb:
+    username1 = request.form['userName']
+    password1 = request.form['pass']
+    if Account.query.filter_by(username=username1).first() is None:
+        return render_template('login.html')
+    username = Account.query.filter_by(username=username1).first().username
+    password = Account.query.filter_by(username=username1).first().password
+
+    if username == username1 and password == password1:
         return redirect(url_for('temp'))
     else:
         return render_template('login.html')
+
 @app.route("/signup.html")
 def signupPage():
     return render_template('signup.html')
@@ -71,6 +69,8 @@ def signup():
     lName = request.form['lName']
     psw1 = request.form['psw']
     psw2 = request.form['psw-repeat']
+    if Account.query.filter_by(username = fName).first() is not None:
+        return render_template('signup.html')
     if psw1 == psw2:
         users[fName] = psw1
         db.session.add(Account(username = fName,email = lName,password = psw1))
