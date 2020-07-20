@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
+    <title></title>
+  </head>
+  <body>
+    <div class="container jumbotron">
+
+        {% for prop in props %}
+
+
+            {% if prop.account.id == userid %}
+            <form action="{{ url_for('removeProp') }}" method="post">
+              <div class="list-group">
+
+                <input type="hidden" name="prop_id" value="{{ prop.addy }}">
+                <input type="submit" value="{{ prop.addy }}">
+              </div>
+            </form>
+            {% endif %}
+
+
+        {% endfor %}
+
+    </div>
+  </body>
+</html>
