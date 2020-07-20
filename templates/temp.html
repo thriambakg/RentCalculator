@@ -12,17 +12,15 @@
         <ul class="navbar-nav ml-auto">
           <li class="nav-item">
             <a class="nav-link" href="addProp.html">Add Property<span class="sr-only">(current)</span></a>
-
+            <a class="nav-link" href="removeProp.html">Remove Property<span class="sr-only">(current)</span></a>
           </li>
         </ul>
       </div>
     </nav>
-
     {% for prop in props %}
-      {% if prop.user == username %}
+      {% if prop.account.id == userid %}
 
-        <h1>{{ prop.address }}</h1>
-        <h1>{{ prop.owner }}</h1>
+        <h1>{{ prop.addy }}</h1>
       {% endif %}
     {% endfor %}
   </body>
