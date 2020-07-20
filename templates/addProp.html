@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
+    <title></title>
+  </head>
+  <body>
+    <div class="container jumbotron">
+      <form name="signup" onsubmit="return signup()" method = "post">
+
+          <div class="form-group">
+            <h1>Add Property</h1>
+            <p>Please fill in this form to add property.</p>
+            <hr>
+
+            <label for="name"><b>Address</b></label>
+            <input type="text" class="form-control" placeholder="Enter Address" name="address" required>
+
+            <label for="name"><b>Owner</b></label>
+            <input type="text" class="form-control" placeholder="Enter Owner" name="owner" required>
+
+            <label for="name"><b>Number of Rooms</b></label>
+            <input type="text" class="form-control" placeholder="Enter rooms" name="rooms" required>
+
+
+
+          </div>
+          <button id="add" type="submit" class="btn btn-primary">Add</button>
+        </form>
+
+    </div>
+  </body>
+</html>

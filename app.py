@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, url_for,redirect
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import current_user
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI']='sqlite:///info.db'
@@ -24,7 +25,7 @@ class Prop(db.Model):
     rooms = db.relationship('rooms', backref = 'prop', lazy = True)
 
     def __repr__(self):
-        return f"Prop('{self.addy}', '{self.email}')"
+        return f"Prop('{self.addy}', '{self.owner}')"
 
 class rooms(db.Model):
     id = db.Column(db.Integer,primary_key = True)
@@ -33,7 +34,7 @@ class rooms(db.Model):
     building = db.Column(db.Integer, db.ForeignKey('prop.id'), nullable = False)
 
     def __repr__(self):
-        return f"rooms('{self.tenant}', '{self.rent}'"
+        return f"rooms('{self.tenant}', '{self.rent}')"
 
 @app.route("/")
 @app.route("/home.html")
@@ -50,11 +51,12 @@ def login():
     password1 = request.form['pass']
     if Account.query.filter_by(username=username1).first() is None:
         return render_template('login.html')
+    user = Account.query.filter_by(username=username1).first()
     username = Account.query.filter_by(username=username1).first().username
     password = Account.query.filter_by(username=username1).first().password
 
     if username == username1 and password == password1:
-        return redirect(url_for('temp'))
+        return user.properties[0].addy
     else:
         return render_template('login.html')
 
@@ -81,4 +83,5 @@ def signup():
 
 @app.route("/temp.html")
 def temp():
+
     return render_template('temp.html')
