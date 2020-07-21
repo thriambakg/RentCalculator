@@ -7,21 +7,18 @@
   <body>
     <div class="container jumbotron">
 
-        {% for prop in props %}
+      {% for prop in props %}
 
 
-            {% if prop.account.id == userid %}
-            <form action="{{ url_for('removeProp') }}" method="post">
-              <div class="list-group">
-
-                <input type="hidden" name="prop_id" value="{{ prop.addy }}">
-                <input type="submit" value="{{ prop.addy }}">
-              </div>
-            </form>
-            {% endif %}
+      {% if prop.account.id == userid %}
+      <form action="{{ url_for('removeProp') }}" method=post class=delete-entry>
+        <input type="hidden" name="entry_id" value="{{ prop.id }}">
+        <input type="submit" value="Delete {{ prop.addy }}" />
+      </form>
+      {% endif %}
 
 
-        {% endfor %}
+      {% endfor %}
 
     </div>
   </body>

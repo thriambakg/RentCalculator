@@ -110,11 +110,13 @@ def removeProperty():
 
 @app.route("/removeProp.html", methods=['POST'])
 def removeProp():
-    propid = request.form['prop_id']
+    propid = request.form['entry_id']
     prop = Prop.query.filter_by(id=propid).first()
     db.session.delete(prop)
     db.session.commit()
-    return userPage()
+    global properties
+    properties = Prop.query.all()
+    return render_template('temp.html', props=properties, userid=userid)
 
 def userPage():
     return redirect(url_for('temp'))
