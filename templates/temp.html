@@ -2,6 +2,7 @@
 <html lang="en" dir="ltr">
   <head>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href= "{{ url_for('static', filename='temp.css') }}">
 
     <title></title>
   </head>
@@ -17,11 +18,25 @@
         </ul>
       </div>
     </nav>
-    {% for prop in props %}
-      {% if prop.account.id == userid %}
+    <div class="container jumbotron">
 
-        <h1>{{ prop.addy }}</h1>
-      {% endif %}
-    {% endfor %}
+          {% for prop in props %}
+            {% if prop.account.id == userid %}
+            <div id = "properties" class="card w-90">
+              <div class="card-body">
+                <h5 class="card-title">{{ prop.addy }}</h5>
+                <p class="card-text">Tenent name would go here</p>
+                <a href="#" class="btn btn-primary">Button</a>
+              </div>
+            </div>
+            {% endif %}
+          {% endfor %}
+
+
+
+
+    </div>
+
+
   </body>
 </html>
