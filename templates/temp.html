@@ -19,14 +19,12 @@
       </div>
     </nav>
     <div class="container jumbotron">
-
           {% for prop in props %}
             {% if prop.account.id == userid %}
-            <div id = "properties" class="card w-90">
+            <div id = "properties" class="card w-85">
               <div class="card-body">
                 <h5 class="card-title">{{ prop.addy }}</h5>
-                <p class="card-text">Tenent name would go here</p>
-                <a href="#" class="btn btn-primary">Button</a>
+                <a href="{{ url_for('prop', prop_id=prop.id) }}" class="btn btn-primary">Details</a>
               </div>
             </div>
             {% endif %}

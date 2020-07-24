@@ -1,12 +1,14 @@
-from flask import Flask, render_template, request, url_for, redirect
+from flask import Flask, render_template, request, url_for, redirect, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import current_user, login_user, login_required, logout_user
+from datetime import datetime
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI']='sqlite:///info.db'
 db = SQLAlchemy(app)
 
-userid = 0
+
+userid=None
 properties = []
 
 class Account(db.Model):
@@ -24,25 +26,33 @@ class Prop(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     addy = db.Column(db.String(30),unique = True, nullable = False)
     owner = db.Column(db.Integer, db.ForeignKey('account.id'),nullable = False)
-    rooms = db.relationship('rooms', backref = 'prop', lazy = True)
+    rooms = db.relationship('Rooms', backref = 'prop', lazy = True)
 
     def __repr__(self):
         return f"Prop('{self.addy}', '{self.owner}')"
 
-class rooms(db.Model):
+class Rooms(db.Model):
     id = db.Column(db.Integer,primary_key = True)
     tenant = db.Column(db.String(30), unique = False, nullable = False)
     rent = db.Column(db.Float(7), nullable = False)
     building = db.Column(db.Integer, db.ForeignKey('prop.id'), nullable = False)
+    history = db.relationship('History',backref = 'viewHist',lazy = True)
 
     def __repr__(self):
-        return f"rooms('{self.tenant}', '{self.rent}')"
+        return f"Rooms('{self.tenant}', '{self.rent}')"
 
+class History(db.Model):
+    id = db.Column(db.Integer,primary_key = True)
+    tenant = db.Column(db.Integer, db.ForeignKey('rooms.id'), nullable=False)
+    datePaid = db.Column(db.DateTime,default = datetime.utcnow,nullable = False)
+
+    def __repr__(self):
+        return f"History('{self.tenant}', '{self.datePaid}')"
 
 @app.route("/")
 @app.route("/home.html")
 def home():
-    return render_template('home.html')
+    return render_template("home.html")
 
 @app.route("/login.html")
 def loginPage():
@@ -87,6 +97,7 @@ def signup():
 @app.route("/temp.html")
 def temp():
     global properties
+    global userid
     properties = Prop.query.all()
     return render_template('temp.html', props=properties, userid=userid)
 
@@ -112,11 +123,68 @@ def removeProperty():
 def removeProp():
     propid = request.form['entry_id']
     prop = Prop.query.filter_by(id=propid).first()
+    rooms = prop.rooms
+    if rooms is not None:
+        for room in rooms:
+            if room.history is not None:
+                for hist in room.history:
+                    db.session.delete(hist)
+                    db.session.commit()
+            db.session.delete(room)
+            db.session.commit()
     db.session.delete(prop)
     db.session.commit()
     global properties
     properties = Prop.query.all()
     return render_template('temp.html', props=properties, userid=userid)
+
+@app.route("/prop/<int:prop_id>")
+def prop(prop_id):
+    prop = Prop.query.get(prop_id)
+    rooms = prop.rooms
+    return render_template('details.html', rooms=rooms, addy=prop.addy, prop_id=prop_id)
+
+@app.route("/prop/<int:prop_id>/addRoom", methods=['GET','POST'])
+def addRoom(prop_id):
+    if request.method == 'GET':
+        return render_template('addRoom.html')
+    else:
+        tenant = request.form['tenant']
+        rent = request.form['rent']
+        room1 = Rooms(tenant=tenant, rent=rent, building=prop_id)
+        db.session.add(room1)
+        db.session.commit()
+        prop = Prop.query.get(prop_id)
+        roo = prop.rooms
+        return render_template('details.html', rooms=roo, addy=prop.addy, prop_id=prop_id)
+
+
+@app.route("/prop/<int:prop_id>/removeRoom", methods=['GET','POST'])
+def removeRoom(prop_id):
+    if request.method == 'GET':
+        prop = Prop.query.get(prop_id)
+        roomss = prop.rooms
+        return render_template('removeRoom.html', rooms=roomss)
+    else:
+        roomid = request.form['entry_id']
+        room1 = Rooms.query.filter_by(id=roomid).first()
+        db.session.delete(room1)
+        db.session.commit()
+        prop = Prop.query.get(prop_id)
+        roo = prop.rooms
+        return render_template('details.html', rooms=roo, addy=prop.addy, prop_id=prop_id)
+
+@app.route("/prop/<int:prop_id>/payRent/<int:room_id>")
+def payRent(prop_id, room_id):
+    hist = History(tenant=room_id)
+    db.session.add(hist)
+    db.session.commit()
+    return redirect(url_for('prop', prop_id=prop_id))
+
+@app.route("/prop/<int:prop_id>/payRent/<int:room_id>/paymentHistory")
+def payHist(prop_id, room_id):
+    room = Rooms.query.filter_by(id=room_id).first()
+    return render_template('historyPage.html', room=room, prop_id=prop_id)
 
 def userPage():
     return redirect(url_for('temp'))

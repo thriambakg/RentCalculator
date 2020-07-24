@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href= "{{ url_for('static', filename='temp.css') }}">
+
+    <title></title>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="{{ url_for('temp') }}">{{ addy }}</a>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('addRoom', prop_id=prop_id) }}">Add Room<span class="sr-only">(current)</span></a>
+            <a class="nav-link" href="{{ url_for('removeRoom', prop_id=prop_id) }}">Remove Room<span class="sr-only">(current)</span></a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <div class="container jumbotron">
+
+      {% for room in rooms %}
+        <div class="card w-85">
+          <div class="card-body">
+            <h5 class="card-title">{{ room.tenant }}</h5>
+            {% if room.history|length != 0 %}
+              <p class="card-text">Last Payment: {{ room.history[room.history|length - 1].datePaid.strftime("%B %d, %Y") }}</p>
+            {% else %}
+              <p class="card-text">Last Payment: None Yet</p>
+            {% endif %}
+
+            <a href="{{ url_for('payRent', prop_id=room.prop.id, room_id=room.id) }}" class="btn btn-primary">Paid ${{ room.rent }}</a>
+            <a href="{{ url_for('payHist', prop_id=room.prop.id, room_id=room.id) }}" class="btn btn-secondary">Payment History</a>
+          </div>
+        </div>
+      {% endfor %}
+
+
+
+    </div>
+
+
+  </body>
+</html>
