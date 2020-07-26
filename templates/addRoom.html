@@ -17,7 +17,13 @@
             <input type="text" class="form-control" placeholder="Enter Tenant" name="tenant" required>
 
             <label for="name"><b>Rent</b></label>
-            <input type="number" class="form-control" placeholder="Enter Rent" name="rent" required>
+            <input type="number" step = ".01" class="form-control" placeholder="Enter Rent" name="rent" required>
+
+            <label for="dueDate"><b>Due Date of Rent</b></label>
+            <input type="number" min="1" max="31" class="form-control" placeholder="Enter Rent" name="dueDate" required>
+
+            <label for="email"><b>Email</b></label>
+            <input type="email" class="form-control" placeholder="Email Address of Tenant" name="email" required>
 
 
           </div>

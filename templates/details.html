@@ -8,30 +8,56 @@
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <a class="navbar-brand" href="{{ url_for('temp') }}">{{ addy }}</a>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <a class="navbar-brand" href="{{ url_for('temp') }}">Back to Properties</a>
+      <div class="container-fluid" id="navbarSupportedContent">
         <ul class="navbar-nav ml-auto">
           <li class="nav-item">
-            <a class="nav-link" href="{{ url_for('addRoom', prop_id=prop_id) }}">Add Room<span class="sr-only">(current)</span></a>
-            <a class="nav-link" href="{{ url_for('removeRoom', prop_id=prop_id) }}">Remove Room<span class="sr-only">(current)</span></a>
+            <a class="nav-link" href="{{ url_for('addRoom', prop_id=prop_id) }}">Add Tenant<span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('removeRoom', prop_id=prop_id) }}">Remove Tenant<span class="sr-only">(current)</span></a>
           </li>
         </ul>
       </div>
     </nav>
     <div class="container jumbotron">
-
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">
+              {{ message }}
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
       {% for room in rooms %}
         <div class="card w-85">
           <div class="card-body">
             <h5 class="card-title">{{ room.tenant }}</h5>
+
+            {% if room.dueDate == 1 or room.dueDate == 21 or room.dueDate ==31 %}
+              <p class="card-text">Due Date: {{ room.dueDate }}st of Every Month</p>
+            {% elif room.dueDate == 2 or room.dueDate == 22 %}
+              <p class="card-text">Due Date: {{ room.dueDate }}nd of Every Month</p>
+            {% else %}
+              <p class="card-text">Due Date: {{ room.dueDate }}th of Every Month</p>
+            {% endif %}
+
+
+
+
             {% if room.history|length != 0 %}
               <p class="card-text">Last Payment: {{ room.history[room.history|length - 1].datePaid.strftime("%B %d, %Y") }}</p>
             {% else %}
               <p class="card-text">Last Payment: None Yet</p>
             {% endif %}
 
-            <a href="{{ url_for('payRent', prop_id=room.prop.id, room_id=room.id) }}" class="btn btn-primary">Paid ${{ room.rent }}</a>
+            <a href="{{ url_for('payRent', prop_id=room.prop.id, room_id=room.id) }}" class="btn btn-primary">Pay ${{ room.rent }}</a>
             <a href="{{ url_for('payHist', prop_id=room.prop.id, room_id=room.id) }}" class="btn btn-secondary">Payment History</a>
+            <a align = "center" href="{{ url_for('reminder', prop_id=room.prop.id, room_id=room.id) }}" class="btn btn-secondary">Send Reminder</a>
+
+
+
           </div>
         </div>
       {% endfor %}
